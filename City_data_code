@@ -1,0 +1,19 @@
+def fetch_city_data(api_key, country, min_population=500000, limit=20):
+    url = "https://api.api-ninjas.com/v1/city"
+    headers = {"X-Api-Key": api_key}
+    querystring = {
+        "country": country, 
+        "min_population": min_population, 
+        "limit": limit
+    }
+
+    response = requests.get(url, headers=headers, params=querystring)
+    if response.status_code == 200:
+        cities_json = response.json()
+        city_info = pd.DataFrame(cities_json)
+        city_info.rename(columns={'name': 'city_name'}, inplace=True)
+        
+        return city_info
+    else:
+        print(f"Error fetching city data: {response.status_code}")
+        return None
